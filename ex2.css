@@ -1,0 +1,27 @@
+.main{
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 60px;
+    background-image: url('https://www.ixpap.com/images/2021/02/obito-wallpaper-ixpap-13.jpg');
+    height: 150vh;
+    width: 100vw;
+    background-size: cover;
+    color: rgb(0, 187, 255);
+    padding: 25px;
+    margin: 50px ;
+    border-radius: 15px;
+}
+.img{
+    height: 75px;
+    border-radius: 15px;
+    margin: 40px;
+
+}
+.text{
+    background-color: rgb(2, 5, 8);
+    border-radius: 10px;
+    margin: 20px;
+    padding: 15px;
+    font-size: 10px;
+    font-family: Lato, Arial, Helvetica, sans-serif;
+}

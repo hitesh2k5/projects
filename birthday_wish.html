@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Wish</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            overflow: hidden; /* Prevent scrollbars */
+        }
+
+        .gift-container,
+        .birthday-container {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .gift-container {
+            display: block;
+        }
+
+        h1 {
+            color: #ff6b6b;
+            font-size: 3em;
+            margin-bottom: 50px;
+        }
+
+        p {
+            color: #333;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .gift-box {
+            width: 150px;
+            height: 150px;
+            background-color: #000;
+            position: relative;
+            margin: 0 auto;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .gift-box.opened {
+            transform: scale(0.8) translateY(-50px);
+        }
+
+        .ribbon-horizontal,
+        .ribbon-vertical,
+        .ribbon-knot,
+        .ribbon-top-loop,
+        .ribbon-second-loop,
+        .hole {
+            transition: all 0.5s ease-in-out;
+        }
+
+        .gift-box.opened .ribbon-horizontal {
+            width: 0;
+        }
+
+        .gift-box.opened .ribbon-vertical {
+            height: 0;
+        }
+
+        .gift-box.opened .ribbon-knot,
+        .gift-box.opened .ribbon-top-loop,
+        .gift-box.opened .ribbon-second-loop {
+            opacity: 0;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 30px;
+            background-color: #f7d1d1;
+            opacity: 0.8;
+            top: -20px;
+            animation: fall 3s infinite;
+            z-index: 100;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .ribbon-horizontal {
+            position: absolute;
+            width: 100%;
+            height: 30px;
+            background-color: #d4af37;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .ribbon-vertical {
+            position: absolute;
+            width: 30px;
+            height: 100%;
+            background-color: #d4af37;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .ribbon-knot {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #d4af37;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .ribbon-top-loop {
+            position: absolute;
+            width: 70px;
+            height: 20px;
+            background-color: #d4af37;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-45deg);
+            border-radius: 10px 10px 0 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .ribbon-top-loop::before {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 20px;
+            background-color: #d4af37;
+            border-radius: 10px 10px 0 0;
+            top: -5px;
+            left: -10px;
+            transform: rotate(90deg);
+        }
+
+        .ribbon-second-loop {
+            position: absolute;
+            width: 70px;
+            height: 20px;
+            background-color: #d4af37;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            border-radius: 10px 10px 10px 10px;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .ribbon-second-loop::before {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 20px;
+            background-color: #d4af37;
+            border-radius: 10px 10px 10px 10px;
+            top: -5px;
+            left: -10px;
+            transform: rotate(90deg);
+        }
+
+        .hole {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #000;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+        }
+
+        .paper {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            opacity: 0.8;
+            z-index: 100;
+            animation: fly 3s infinite;
+        }
+
+        @keyframes fly {
+            0% {
+                transform: translateX(-100vw) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw) translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Styles for balloons and cake */
+        
+
+        #surprise {
+  font-size: 90px;
+  text-shadow: 2px 2px 5px #000;
+  color: #ff4500; /* or any other color you prefer */
+  font-family: 'Times New Roman', Times, serif;
+  animation: bounce 1s infinite alternate; /* adding a bounce animation effect */
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Assuming the white box has an ID or class, e.g., #white-box */
+#white-box {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+/* Sticker styles */
+.sticker {
+    position: absolute;
+    z-index: 2; /* Ensure stickers are above other elements */
+    width: 100px; /* Adjust size as needed */
+    height: 100px; /* Adjust size as needed */
+}
+
+/* Sticker positions */
+#sticker1 {
+    top: -50px; /* Adjust this value to move outside */
+    right: -50px; /* Adjust this value to move outside */
+}
+
+#sticker2 {
+    top: -50px; /* Adjust this value to move outside */
+    left: -50px; /* Adjust this value to move outside */
+}
+
+#sticker3 {
+    bottom: -150px; /* Adjust this value to move outside */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 50%;
+}
+
+        
+
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex flex-column justify-content-center">
+                    <div id="gift-container" class="gift-container">
+                        <h1>Open Your Gift!</h1>
+                        <div id="gift-box" class="gift-box">
+                            <div class="ribbon-horizontal"></div>
+                            <div class="ribbon-vertical"></div>
+                            <div class="ribbon-knot"></div>
+                            <div class="ribbon-top-loop">
+                                <div class="hole"></div>
+                            </div>
+                            <div class="ribbon-second-loop">
+                                <div class="hole"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-12">
+                <div id="birthday-container" class="birthday-container">
+                    <h1 id="birthday-message">Happy Birthday!</h1>
+                    <p id="birthday-submessage">Wishing you a day filled with love, joy, and happiness!</p>
+                    <div id="surprise">🎉🎂🎁</div>
+                
+                    <!-- Stickers -->
+                    <img id="sticker1" class="sticker" src="https://s3.getstickerpack.com/storage/uploads/sticker-pack/shin-chan-1/sticker_9.png?74e7f50c0e392dffdeee5d72ebd4728d&d=200x200" alt="Shin-chan Sticker">
+                    <img id="sticker2" class="sticker" src="https://123emoji.com/wp-content/uploads/2016/04/37_result1.png" alt="Laughing Emoji">
+                    <img id="sticker3" class="sticker" src="https://media3.giphy.com/media/fxsW3PnQx06N7Mop3D/source.gif" alt="Birthday Cake GIF">
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const giftBox = document.getElementById('gift-box');
+
+        giftBox.addEventListener('click', function() {
+            giftBox.classList.add('opened');
+
+            setTimeout(() => {
+                showBirthdayMessage();
+                createConfetti();
+                createPapers(); // Add this line to create paper elements
+            }, 1000); // Delay to show the opening animation before switching to the birthday message
+        });
+
+        function showBirthdayMessage() {
+            const giftContainer = document.getElementById('gift-container');
+            const birthdayContainer = document.getElementById('birthday-container');
+
+            giftContainer.style.display = 'none';
+            birthdayContainer.style.display = 'block';
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = getRandomColor();
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                document.body.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.remove(); // Remove the confetti after animation
+                }, 3000);
+            }
+        }
+
+        function getRandomColor() {
+            const colors = ['#f7d1d1', '#ffd700', '#ff6b6b', '#ffcc00', '#8a2be2'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function createPapers() {
+            for (let i = 0; i < 50; i++) {
+                const paper = document.createElement('div');
+                paper.classList.add('paper');
+                paper.style.width = `${Math.random() * 20 + 10}px`; // Random width between 10px and 30px
+                paper.style.height = paper.style.width; // Make height equal to width for a square paper
+                paper.style.backgroundColor = getRandomColor();
+                paper.style.left = `${Math.random() * 100}vw`;
+                paper.style.animationDelay = `${Math.random() * 3}s`;
+                document.body.appendChild(paper);
+
+                setTimeout(() => {
+                    paper.remove(); // Remove the paper after animation
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+
+</html>

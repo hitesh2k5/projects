@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #080200, #3ce750, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            transition: background 0.5s ease;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #inputSection, #weatherReport {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px #03436e;
+        }
+
+        button:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px #2980b9;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .weather {
+            margin-top: 30px;
+            font-size: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="inputSection">
+        <h1>Weather Report</h1>
+        <input type="text" id="city" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+    </div>
+
+    <div class="weather hidden" id="weatherReport"></div>
+
+    <script>
+        const apiKey = 'dfcc3a614d1bb1d7ae461c7856781a98';
+
+        function getWeather() {
+            const city = document.getElementById('city').value;
+            if (city) {
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.cod === 200) {
+                            const weatherData = `
+                                <h2>Weather in ${data.name}</h2>
+                                <p>Temperature: ${data.main.temp}°C</p>
+                                <p>Weather: ${data.weather[0].description}</p>
+                                <p>Humidity: ${data.main.humidity}%</p>
+                                <p>Wind Speed: ${data.wind.speed} m/s</p>
+                                <button onclick="goBack()">Back</button>
+                            `;
+                            document.getElementById('weatherReport').innerHTML = weatherData;
+                            document.getElementById('inputSection').classList.add('hidden');
+                            document.getElementById('weatherReport').classList.remove('hidden');
+                            changeBackground(data.weather[0].description);
+                        } else {
+                            document.getElementById('weatherReport').innerHTML = `<p>${data.message}</p>`;
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('weatherReport').innerHTML = `<p>Error fetching weather data</p>`;
+                    });
+            } else {
+                alert('Please enter a city name');
+            }
+        }
+
+        function changeBackground(weatherDescription) {
+            let backgroundUrl = 'https://wallpapercave.com/wp/qQa5Pd7.jpg';
+
+            if (weatherDescription.includes('cloud')) {
+                backgroundUrl = 'http://getwallpapers.com/wallpaper/full/a/9/7/16796.jpg';
+            } else if (weatherDescription.includes('rain')) {
+                backgroundUrl = 'https://tse3.mm.bing.net/th?id=OIP.LOHEdIdrqRQrldijtwM5zwHaE8&pid=Api&P=0&h=180';
+            } else if (weatherDescription.includes('sunny')) {
+                backgroundUrl = 'https://images.hdqwalls.com/download/sunny-fields-3840x2400.jpg';
+            } else if (weatherDescription.includes('snow')) {
+                backgroundUrl = 'https://tse3.mm.bing.net/th?id=OIP.NNQOMaR25aQ5l23ceG-zsQHaEK&pid=Api&P=0&h=180';
+            }
+
+            document.body.style.backgroundImage = `url('${backgroundUrl}')`;
+        }
+
+        function goBack() {
+            document.getElementById('inputSection').classList.remove('hidden');
+            document.getElementById('weatherReport').classList.add('hidden');
+            document.getElementById('city').value = '';
+            document.body.style.backgroundImage = "linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)";
+            document.body.style.backgroundSize = "400% 400%";
+            document.body.style.animation = "gradientAnimation 15s ease infinite";
+        }
+    </script>
+</body>
+</html>
